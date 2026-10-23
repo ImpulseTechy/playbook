@@ -1,10 +1,12 @@
-const float VREF = 1.1;      // measure the AREF pin with your meter and put the real value here
+// measure the AREF pin with your meter and put the real value here
+const float VREF = 1.1;
 const float R_SHUNT = 10.0;  // ohm
 
 void setup() {
   Serial.begin(9600);
   analogReference(INTERNAL); // 1.1 V reference: about 1.07 mV per step
-  for (int n = 0; n < 5; n++) analogRead(A0);   // discard readings while the reference settles
+  // discard readings while the reference settles
+  for (int n = 0; n < 5; n++) analogRead(A0);
 }
 
 void loop() {
