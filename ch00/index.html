@@ -1,0 +1,66 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Chapter 0: Your Bench</title><link rel="stylesheet" href="../assets/style.css"></head>
+<body><header class="top"><div><small>THE PRACTICAL ELECTRONICS PLAYBOOK · VOLUME 1</small><br>
+<a href="../index.html">Simulations, code and files</a></div></header>
+<main><p class="tag">Chapter 0</p><h1>Your Bench</h1>
+<h2>Simulations</h2><p class="lead">Try the circuit on screen before you build it. Each simulation says what to try.</p>
+<div class="card"><span class="tag">Tinkercad Circuits</span><p>The potentiometer circuit with a virtual multimeter, to practise Experiment 4 on screen.</p><p class="soon">Coming soon.</p></div>
+<h2>Code</h2><p class="lead">The sketches from the chapter, ready to copy into the Arduino IDE.</p>
+<div class="card"><div class="codehead"><h3>Arduino UNO</h3><span><button class="copy" data-target="code0">Copy</button> <a class="btn ghost" href="ch00-uno.ino" download>Download .ino</a></span></div><pre id="code0">const int ADC_PIN = A0;
+float VS = 5.0;                  // the UNO&#x27;s 5 V: measure the 5V pin and put the real value here
+const float BANDGAP = 1.1;       // internal reference, 1.0-1.2 V: calibrate it in Experiment 6
+const bool PLOT = false;         // true: print only the voltage, for the Serial Plotter
+
+float readVcc() {                // measures the 1.1 V reference against the supply
+  ADMUX = _BV(REFS0) | _BV(MUX3) | _BV(MUX2) | _BV(MUX1);
+  delay(2);                      // let the reference settle
+  ADCSRA |= _BV(ADSC);
+  while (bit_is_set(ADCSRA, ADSC)) {}
+  return BANDGAP * 1024.0 / ADC; // supply = 1.1 V x 1024 / reading
+}
+
+void setup() {
+  Serial.begin(9600);
+}
+
+void loop() {
+  float vcc = readVcc();
+  analogRead(ADC_PIN);           // discard one reading after switching channels
+  long sum = 0;
+  for (int n = 0; n &lt; 16; n++) sum += analogRead(ADC_PIN);
+  float raw = sum / 16.0;
+  float v = raw * VS / 1024.0;
+  if (PLOT) { Serial.print(&quot;V:&quot;); Serial.println(v, 3); }
+  else {
+    Serial.print(&quot;raw &quot;); Serial.print(raw, 1);
+    Serial.print(&quot;   pin &quot;); Serial.print(v, 3);
+    Serial.print(&quot; V   supply (internal) &quot;); Serial.print(vcc, 3); Serial.println(&quot; V&quot;);
+  }
+  delay(500);
+}
+</pre></div>
+<div class="card"><div class="codehead"><h3>ESP32</h3><span><button class="copy" data-target="code1">Copy</button> <a class="btn ghost" href="ch00-esp32.ino" download>Download .ino</a></span></div><pre id="code1">const int ADC_PIN = 34;
+const bool PLOT = false;         // true: print only the voltage, for the Serial Plotter
+
+void setup() {
+  Serial.begin(115200);
+  analogReadResolution(12);      // 0-4095 (the default)
+}
+
+void loop() {
+  long sumRaw = 0, sumMv = 0;
+  for (int n = 0; n &lt; 16; n++) {
+    sumRaw += analogRead(ADC_PIN);
+    sumMv  += analogReadMilliVolts(ADC_PIN);   // factory-calibrated
+  }
+  float raw = sumRaw / 16.0;
+  float v = sumMv / 16.0 / 1000.0;
+  if (PLOT) Serial.printf(&quot;V:%.3f\n&quot;, v);
+  else Serial.printf(&quot;raw %6.1f   pin %.3f V   (raw x 3.3/4096 = %.3f V)\n&quot;, raw, v, raw * 3.3 / 4096.0);
+  delay(500);
+}
+</pre></div>
+<p style="margin-top:2em;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap"><a href="../index.html">All chapters</a> <a href="../ch01/index.html">Chapter 1 →</a></p></main>
+<footer>Companion to <em>The Practical Electronics Playbook</em> by Yogesh Bawane. Simulations run on third-party websites; their names are trademarks of their owners.</footer>
+<script src="../assets/copy.js"></script></body></html>
