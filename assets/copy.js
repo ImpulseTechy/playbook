@@ -1,0 +1,2 @@
+document.querySelectorAll('button.copy').forEach(b=>b.addEventListener('click',()=>{
+const t=document.getElementById(b.dataset.target).innerText;navigator.clipboard.writeText(t).then(()=>{b.textContent='Copied';setTimeout(()=>b.textContent='Copy',1500)})}));
