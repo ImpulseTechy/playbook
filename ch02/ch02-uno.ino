@@ -1,7 +1,8 @@
 const int LED_PIN = 8;
 
 void setup() {
-  pinMode(LED_PIN, OUTPUT);     // without this line the LED glows only faintly
+  // without this line the LED glows only faintly
+  pinMode(LED_PIN, OUTPUT);
   digitalWrite(LED_PIN, HIGH);  // LED on, steady, for measuring
 }
 
