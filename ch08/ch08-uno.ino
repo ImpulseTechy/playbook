@@ -1,4 +1,5 @@
-const float RATIO = 11.0;     // (100k + 10k) / 10k; adjust after checking with your meter
+// (100k + 10k) / 10k; adjust after checking with your meter
+const float RATIO = 11.0;
 const int N = 120;            // 120 samples x 0.5 ms = 60 ms
 int samples[N];
 

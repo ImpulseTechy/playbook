@@ -8,7 +8,8 @@
 <div class="card"><span class="tag">Falstad CircuitJS</span><p>A 17 V peak, 50 Hz source into the bridge, with the 1000 µF capacitor and the 2.2 kΩ load. Watch current take turns through the diodes; click the capacitor switch to see the ripple without it.</p><a class="btn" href="https://www.falstad.com/circuit/circuitjs.html?ctz=CQAgjCAMB0l5AmckQFYUJegUANxAJwBsIAzKScSACwAcU4aKYR0BA7AyjKtgO6ESdEAgTUa9SPxFiJM8WDBIpAE3nglI2vTDsSSMADlqcatjWjxYjNvB6R4Y6fPgize5Y1IDTyGbUs7vqy1g5GJn7SnqGe5CRSArEUgmTJCa5BGSLsylG2uiSkqAb26YHZSEXeOVDYAM5kxXZCLM1cIABmAIYANnUAptgAxjStBaP6NdywkBDpVRUTi+nUY-aomuMrrQg1G9W5AE5om+uau8oycNgA5lkXWaR+tZic+22obm3iAPYArgAXbA-OxkS6kKzTWYIVAMAC0EH+QIAHjQ4OB0GgvmBUKQaOADPAADp1P4AMRJdT4AEsAUMABbYIA" target="_blank" rel="noopener">Open in Falstad</a></div>
 <div class="card"><span class="tag">LTspice</span><p>The same bridge, run with 100 µF, 470 µF and 1000 µF. Compare the ripple, and read it from the .meas result.</p><p class="lead">Install LTspice (free) from <a href="https://www.analog.com/ltspice">analog.com/ltspice</a>, open the file, and press Run.</p><a class="btn" href="ch08-bridge-rectifier.asc" download target="_blank" rel="noopener">Download ch08-bridge-rectifier.asc</a></div>
 <h2>Code</h2><p class="lead">The sketches from the chapter, ready to copy into the Arduino IDE.</p>
-<div class="card"><div class="codehead"><h3>Arduino UNO</h3><span><button class="copy" data-target="code0">Copy</button> <a class="btn ghost" href="ch08-uno.ino" download>Download .ino</a></span></div><pre id="code0">const float RATIO = 11.0;     // (100k + 10k) / 10k; adjust after checking with your meter
+<div class="card"><div class="codehead"><h3>Arduino UNO</h3><span><button class="copy" data-target="code0">Copy</button> <a class="btn ghost" href="ch08-uno.ino" download>Download .ino</a></span></div><pre id="code0">// (100k + 10k) / 10k; adjust after checking with your meter
+const float RATIO = 11.0;
 const int N = 120;            // 120 samples x 0.5 ms = 60 ms
 int samples[N];
 
@@ -29,7 +30,8 @@ void loop() {
   delay(2000);
 }
 </pre></div>
-<div class="card"><div class="codehead"><h3>ESP32</h3><span><button class="copy" data-target="code1">Copy</button> <a class="btn ghost" href="ch08-esp32.ino" download>Download .ino</a></span></div><pre id="code1">const float RATIO = 11.0;     // (100k + 10k) / 10k; adjust after checking with your meter
+<div class="card"><div class="codehead"><h3>ESP32</h3><span><button class="copy" data-target="code1">Copy</button> <a class="btn ghost" href="ch08-esp32.ino" download>Download .ino</a></span></div><pre id="code1">// (100k + 10k) / 10k; adjust after checking with your meter
+const float RATIO = 11.0;
 const int N = 120;            // 120 samples x 0.5 ms = 60 ms
 int samples[N];
 
