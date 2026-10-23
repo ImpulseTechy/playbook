@@ -6,7 +6,7 @@
 <main><p class="tag">Chapter 13</p><h1>PWM: Speed and Brightness</h1>
 <h2>Simulations</h2><p class="lead">Try the circuit on screen before you build it. Each simulation says what to try.</p>
 <div class="card"><span class="tag">Wokwi</span><p>Runs this chapter&#x27;s sketch on a simulated board.</p><a class="btn" href="https://wokwi.com/projects/478575763317332993" target="_blank" rel="noopener">Arduino UNO</a><a class="btn" href="https://wokwi.com/projects/478575774091456513" target="_blank" rel="noopener">ESP32</a></div>
-<div class="card"><span class="tag">Tinkercad Circuits</span><p>PWM speed control of a DC motor through the L293D on the Arduino UNO.</p><p class="soon">Coming soon.</p></div>
+<div class="card"><span class="tag">Tinkercad Circuits</span><p>PWM speed control of a DC motor through the L293D&#x27;s EN1 pin. Type a duty cycle in the Serial Monitor and watch the meter: it reads the average, duty × the full motor voltage. Tinkercad&#x27;s motor is ideal: it turns even at a few per cent, where a real geared motor stays still until the duty is high enough to overcome friction.</p><a class="btn" href="https://www.tinkercad.com/things/94lAek5WeyL" target="_blank" rel="noopener">Open in Tinkercad</a></div>
 <h2>Code</h2><p class="lead">The sketches from the chapter, ready to copy into the Arduino IDE.</p>
 <div class="card"><div class="codehead"><h3>Arduino UNO</h3><span><button class="copy" data-target="code0">Copy</button> <a class="btn ghost" href="ch13-uno.ino" download>Download .ino</a></span></div><pre id="code0">const int PWM_PIN = 9;   // Part A: LED resistor. Part B: L293D EN1.
 const int IN1 = 8;       // Part B: L293D 1A
