@@ -15,7 +15,8 @@ bool hold = false;
 void write595(byte value) {
   digitalWrite(LATCH_PIN, LOW);
   shiftOut(DATA_PIN, CLOCK_PIN, MSBFIRST, value);  // QH first, QA last
-  digitalWrite(LATCH_PIN, HIGH);                   // rising edge: all 8 outputs update together
+  // rising edge: all 8 outputs update together
+  digitalWrite(LATCH_PIN, HIGH);
 }
 
 void setup() {
@@ -37,12 +38,19 @@ void loop() {
     hold = (v &gt;= 0);
     if (hold) {
       write595((byte)constrain(v, 0, 255));
-      Serial.print(&quot;Holding &quot;); Serial.println((byte)constrain(v, 0, 255), BIN);
+      Serial.print(&quot;Holding &quot;);
+      Serial.println((byte)constrain(v, 0, 255), BIN);
     }
   }
   if (hold) return;
-  for (int k = 0; k &lt; 8 &amp;&amp; !Serial.available(); k++) { write595(1 &lt;&lt; k); delay(150); }
-  for (int n = 0; n &lt; 256 &amp;&amp; !Serial.available(); n++) { write595(n); delay(40); }
+  for (int k = 0; k &lt; 8 &amp;&amp; !Serial.available(); k++) {
+    write595(1 &lt;&lt; k);
+    delay(150);
+  }
+  for (int n = 0; n &lt; 256 &amp;&amp; !Serial.available(); n++) {
+    write595(n);
+    delay(40);
+  }
 }
 </pre></div>
 <div class="card"><div class="codehead"><h3>ESP32</h3><span><button class="copy" data-target="code1">Copy</button> <a class="btn ghost" href="ch16-esp32.ino" download>Download .ino</a></span></div><pre id="code1">const int DATA_PIN  = 23;  // SER   (pin 14)
@@ -53,7 +61,8 @@ bool hold = false;
 void write595(byte value) {
   digitalWrite(LATCH_PIN, LOW);
   shiftOut(DATA_PIN, CLOCK_PIN, MSBFIRST, value);  // QH first, QA last
-  digitalWrite(LATCH_PIN, HIGH);                   // rising edge: all 8 outputs update together
+  // rising edge: all 8 outputs update together
+  digitalWrite(LATCH_PIN, HIGH);
 }
 
 void setup() {
@@ -79,8 +88,14 @@ void loop() {
     }
   }
   if (hold) return;
-  for (int k = 0; k &lt; 8 &amp;&amp; !Serial.available(); k++) { write595(1 &lt;&lt; k); delay(150); }
-  for (int n = 0; n &lt; 256 &amp;&amp; !Serial.available(); n++) { write595(n); delay(40); }
+  for (int k = 0; k &lt; 8 &amp;&amp; !Serial.available(); k++) {
+    write595(1 &lt;&lt; k);
+    delay(150);
+  }
+  for (int n = 0; n &lt; 256 &amp;&amp; !Serial.available(); n++) {
+    write595(n);
+    delay(40);
+  }
 }
 </pre></div>
 <p style="margin-top:2em;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap"><a href="../ch15/index.html">← Chapter 15</a> <a href="../index.html">All chapters</a> <a href="../ch17/index.html">Chapter 17 →</a></p></main>

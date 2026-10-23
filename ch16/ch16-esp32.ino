@@ -6,7 +6,8 @@ bool hold = false;
 void write595(byte value) {
   digitalWrite(LATCH_PIN, LOW);
   shiftOut(DATA_PIN, CLOCK_PIN, MSBFIRST, value);  // QH first, QA last
-  digitalWrite(LATCH_PIN, HIGH);                   // rising edge: all 8 outputs update together
+  // rising edge: all 8 outputs update together
+  digitalWrite(LATCH_PIN, HIGH);
 }
 
 void setup() {
@@ -32,6 +33,12 @@ void loop() {
     }
   }
   if (hold) return;
-  for (int k = 0; k < 8 && !Serial.available(); k++) { write595(1 << k); delay(150); }
-  for (int n = 0; n < 256 && !Serial.available(); n++) { write595(n); delay(40); }
+  for (int k = 0; k < 8 && !Serial.available(); k++) {
+    write595(1 << k);
+    delay(150);
+  }
+  for (int n = 0; n < 256 && !Serial.available(); n++) {
+    write595(n);
+    delay(40);
+  }
 }
