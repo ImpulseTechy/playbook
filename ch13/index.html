@@ -39,7 +39,8 @@ void loop() {
 <div class="card"><div class="codehead"><h3>ESP32</h3><span><button class="copy" data-target="code1">Copy</button> <a class="btn ghost" href="ch13-esp32.ino" download>Download .ino</a></span></div><pre id="code1">const int PWM_PIN = 25;  // Part A: LED resistor. Part B: L293D EN1.
 const int IN1 = 26;      // Part B: L293D 1A
 const int IN2 = 27;      // Part B: L293D 2A
-const int FREQ = 1000;   // PWM frequency (Hz). Keep at or below 5000 for the L293D.
+// PWM frequency (Hz). Keep at or below 5000 for the L293D.
+const int FREQ = 1000;
 const int RES  = 8;      // resolution (bits): duty values 0-255
 
 void setup() {

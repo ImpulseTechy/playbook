@@ -1,7 +1,8 @@
 const int PWM_PIN = 25;  // Part A: LED resistor. Part B: L293D EN1.
 const int IN1 = 26;      // Part B: L293D 1A
 const int IN2 = 27;      // Part B: L293D 2A
-const int FREQ = 1000;   // PWM frequency (Hz). Keep at or below 5000 for the L293D.
+// PWM frequency (Hz). Keep at or below 5000 for the L293D.
+const int FREQ = 1000;
 const int RES  = 8;      // resolution (bits): duty values 0-255
 
 void setup() {
