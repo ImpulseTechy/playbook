@@ -1,4 +1,5 @@
-const int BUTTON_PIN = 27;              // not GPIO 34-39: they have no pull-ups
+// not GPIO 34-39: they have no pull-ups
+const int BUTTON_PIN = 27;
 const unsigned long DEBOUNCE_MS = 20;
 
 int lastReading = HIGH;
@@ -9,7 +10,8 @@ int presses = 0;
 void setup() {
   Serial.begin(115200);
   pinMode(BUTTON_PIN, INPUT);           // external 10 k pull-up to 3V3 fitted
-  // pinMode(BUTTON_PIN, INPUT_PULLUP); // use this instead if you remove the resistor
+  // Without the external resistor, use this line instead:
+  // pinMode(BUTTON_PIN, INPUT_PULLUP);
 }
 
 void loop() {

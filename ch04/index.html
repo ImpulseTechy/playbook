@@ -18,7 +18,8 @@ int presses = 0;
 void setup() {
   Serial.begin(9600);
   pinMode(BUTTON_PIN, INPUT);    // external 10 k pull-up fitted
-  // pinMode(BUTTON_PIN, INPUT_PULLUP);  // use this instead if you remove the resistor
+  // Without the external resistor, use this line instead:
+  // pinMode(BUTTON_PIN, INPUT_PULLUP);
 }
 
 void loop() {
@@ -37,7 +38,8 @@ void loop() {
   }
 }
 </pre></div>
-<div class="card"><div class="codehead"><h3>ESP32</h3><span><button class="copy" data-target="code1">Copy</button> <a class="btn ghost" href="ch04-esp32.ino" download>Download .ino</a></span></div><pre id="code1">const int BUTTON_PIN = 27;              // not GPIO 34-39: they have no pull-ups
+<div class="card"><div class="codehead"><h3>ESP32</h3><span><button class="copy" data-target="code1">Copy</button> <a class="btn ghost" href="ch04-esp32.ino" download>Download .ino</a></span></div><pre id="code1">// not GPIO 34-39: they have no pull-ups
+const int BUTTON_PIN = 27;
 const unsigned long DEBOUNCE_MS = 20;
 
 int lastReading = HIGH;
@@ -48,7 +50,8 @@ int presses = 0;
 void setup() {
   Serial.begin(115200);
   pinMode(BUTTON_PIN, INPUT);           // external 10 k pull-up to 3V3 fitted
-  // pinMode(BUTTON_PIN, INPUT_PULLUP); // use this instead if you remove the resistor
+  // Without the external resistor, use this line instead:
+  // pinMode(BUTTON_PIN, INPUT_PULLUP);
 }
 
 void loop() {

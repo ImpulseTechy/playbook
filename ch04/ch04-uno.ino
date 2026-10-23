@@ -9,7 +9,8 @@ int presses = 0;
 void setup() {
   Serial.begin(9600);
   pinMode(BUTTON_PIN, INPUT);    // external 10 k pull-up fitted
-  // pinMode(BUTTON_PIN, INPUT_PULLUP);  // use this instead if you remove the resistor
+  // Without the external resistor, use this line instead:
+  // pinMode(BUTTON_PIN, INPUT_PULLUP);
 }
 
 void loop() {
