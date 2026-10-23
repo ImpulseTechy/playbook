@@ -1,0 +1,116 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Chapter 18: The RC Low-Pass Filter</title><link rel="stylesheet" href="../assets/style.css"></head>
+<body><header class="top"><div><small>THE PRACTICAL ELECTRONICS PLAYBOOK · VOLUME 1</small><br>
+<a href="../index.html">Simulations, code and files</a></div></header>
+<main><p class="tag">Chapter 18</p><h1>The RC Low-Pass Filter</h1>
+<h2>Simulations</h2><p class="lead">Try the circuit on screen before you build it. Each simulation says what to try.</p>
+<div class="card"><span class="tag">LTspice</span><p>The Bode plot of the RC low-pass for 1 µF and 10 µF: flat, then falling 20 dB per decade above fc.</p><p class="lead">Install LTspice (free) from <a href="https://www.analog.com/ltspice">analog.com/ltspice</a>, open the file, and press Run.</p><a class="btn" href="ch18-rc-lowpass-ac.asc" download target="_blank" rel="noopener">Download ch18-rc-lowpass-ac.asc</a></div>
+<div class="card"><span class="tag">LTspice</span><p>490 Hz PWM (the UNO&#x27;s analogWrite) through the filter: the smoothed output and its ripple for 1 µF and 10 µF.</p><p class="lead">Install LTspice (free) from <a href="https://www.analog.com/ltspice">analog.com/ltspice</a>, open the file, and press Run.</p><a class="btn" href="ch18-pwm-ripple.asc" download target="_blank" rel="noopener">Download ch18-pwm-ripple.asc</a></div>
+<h2>Code</h2><p class="lead">The sketches from the chapter, ready to copy into the Arduino IDE.</p>
+<div class="card"><div class="codehead"><h3>Arduino UNO</h3><span><button class="copy" data-target="code0">Copy</button> <a class="btn ghost" href="ch18-uno.ino" download>Download .ino</a></span></div><pre id="code0">const int OUT_PIN = 9;       // filter input (PWM pin)
+const int ADC_PIN = A0;      // filter output
+const float VS = 5.0;        // measure your 5V pin and put the real value here
+const float F_LIST[] = {2, 5, 10, 16, 20, 50, 100, 200};
+
+float readV() { return analogRead(ADC_PIN) * VS / 1024.0; }
+
+// Part B: software square wave at f Hz; returns the output&#x27;s peak-to-peak (V)
+float squarePP(float f) {
+  unsigned long half = 500000UL / f, t0 = micros(), next = t0 + half;
+  unsigned long settle = 100000UL, run = max(settle + 6 * 2 * half, 600000UL);
+  bool level = HIGH; digitalWrite(OUT_PIN, level);
+  float vmin = 99, vmax = -99;
+  while (micros() - t0 &lt; run) {
+    if ((long)(micros() - next) &gt;= 0) { level = !level; digitalWrite(OUT_PIN, level); next += half; }
+    float v = readV();
+    if (micros() - t0 &gt; settle) { vmin = min(vmin, v); vmax = max(vmax, v); }
+  }
+  digitalWrite(OUT_PIN, LOW);
+  return vmax - vmin;
+}
+
+// Part A: PWM at a duty; prints the output&#x27;s average and ripple
+void pwmTest(int duty) {
+  analogWrite(OUT_PIN, duty * 255 / 100);
+  delay(1000);                                   // settle: more than 5 tau for 10 uF
+  float vmin = 99, vmax = -99, sum = 0; int n = 0;
+  unsigned long t0 = millis();
+  while (millis() - t0 &lt; 500) { float v = readV(); vmin = min(vmin, v); vmax = max(vmax, v); sum += v; n++; }
+  Serial.print(&quot;PWM &quot;); Serial.print(duty); Serial.print(&quot; %: average &quot;);
+  Serial.print(sum / n, 3); Serial.print(&quot; V, ripple &quot;);
+  Serial.print((vmax - vmin) * 1000, 0); Serial.println(&quot; mV p-p&quot;);
+  analogWrite(OUT_PIN, 0);
+}
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(OUT_PIN, OUTPUT);
+}
+
+void loop() {
+  Serial.println(&quot;Part B: square wave through the filter&quot;);
+  for (float f : F_LIST) {
+    float pp = squarePP(f);
+    Serial.print(f, 0); Serial.print(&quot; Hz: &quot;); Serial.print(pp, 2); Serial.println(&quot; V p-p&quot;);
+  }
+  Serial.println(&quot;Part A: PWM through the filter&quot;);
+  pwmTest(25); pwmTest(50); pwmTest(75);
+  Serial.println(&quot;Send any character to repeat.&quot;);
+  while (!Serial.available()) {}
+  while (Serial.available()) Serial.read();
+}
+</pre></div>
+<div class="card"><div class="codehead"><h3>ESP32</h3><span><button class="copy" data-target="code1">Copy</button> <a class="btn ghost" href="ch18-esp32.ino" download>Download .ino</a></span></div><pre id="code1">const int OUT_PIN = 25;      // filter input
+const int ADC_PIN = 34;      // filter output
+const int PWM_FREQ = 1000;   // Hz
+const float F_LIST[] = {2, 5, 10, 16, 20, 50, 100, 200};
+
+float readV() { return analogReadMilliVolts(ADC_PIN) / 1000.0; }
+
+// Part B: software square wave at f Hz; returns the output&#x27;s peak-to-peak (V)
+float squarePP(float f) {
+  unsigned long half = 500000UL / f, t0 = micros(), next = t0 + half;
+  unsigned long settle = 100000UL, run = max(settle + 6 * 2 * half, 600000UL);
+  bool level = HIGH; digitalWrite(OUT_PIN, level);
+  float vmin = 99, vmax = -99;
+  while (micros() - t0 &lt; run) {
+    if ((long)(micros() - next) &gt;= 0) { level = !level; digitalWrite(OUT_PIN, level); next += half; }
+    float v = readV();
+    if (micros() - t0 &gt; settle) { vmin = min(vmin, v); vmax = max(vmax, v); }
+  }
+  digitalWrite(OUT_PIN, LOW);
+  return vmax - vmin;
+}
+
+// Part A: PWM at a duty; prints the output&#x27;s average and ripple
+void pwmTest(int duty) {
+  ledcAttach(OUT_PIN, PWM_FREQ, 8);              // ESP32 Arduino core 3.x
+  ledcWrite(OUT_PIN, duty * 255 / 100);
+  delay(1000);
+  float vmin = 99, vmax = -99, sum = 0; int n = 0;
+  unsigned long t0 = millis();
+  while (millis() - t0 &lt; 500) { float v = readV(); vmin = min(vmin, v); vmax = max(vmax, v); sum += v; n++; }
+  Serial.printf(&quot;PWM %d %%: average %.3f V, ripple %.0f mV p-p\n&quot;, duty, sum / n, (vmax - vmin) * 1000);
+  ledcDetach(OUT_PIN);                           // back to a plain GPIO
+  pinMode(OUT_PIN, OUTPUT); digitalWrite(OUT_PIN, LOW);
+}
+
+void setup() {
+  Serial.begin(115200);
+  pinMode(OUT_PIN, OUTPUT);
+}
+
+void loop() {
+  Serial.println(&quot;Part B: square wave through the filter&quot;);
+  for (float f : F_LIST) Serial.printf(&quot;%.0f Hz: %.2f V p-p\n&quot;, f, squarePP(f));
+  Serial.println(&quot;Part A: PWM through the filter&quot;);
+  pwmTest(25); pwmTest(50); pwmTest(75);
+  Serial.println(&quot;Send any character to repeat.&quot;);
+  while (!Serial.available()) {}
+  while (Serial.available()) Serial.read();
+}
+</pre></div>
+<p style="margin-top:2em;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap"><a href="../ch17/index.html">← Chapter 17</a> <a href="../index.html">All chapters</a> <a href="../ch19/index.html">Chapter 19 →</a></p></main>
+<footer>Companion to <em>The Practical Electronics Playbook</em> by Yogesh Bawane. Simulations run on third-party websites; their names are trademarks of their owners.</footer>
+<script src="../assets/copy.js"></script></body></html>
