@@ -6,7 +6,8 @@ void setup() {
 }
 
 void loop() {
-  digitalWrite(SWITCH_PIN, HIGH);   // gate at about 3.3 V: on for this small load
+  // gate at about 3.3 V: on for this small load
+  digitalWrite(SWITCH_PIN, HIGH);
   Serial.println("Load ON");
   delay(3000);
   digitalWrite(SWITCH_PIN, LOW);
