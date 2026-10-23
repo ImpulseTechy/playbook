@@ -1,9 +1,13 @@
 const int ADC_PIN = A0;
-float VS = 5.0;                  // the UNO's 5 V: measure the 5V pin and put the real value here
-const float BANDGAP = 1.1;       // internal reference, 1.0-1.2 V: calibrate it in Experiment 6
-const bool PLOT = false;         // true: print only the voltage, for the Serial Plotter
+// the UNO's 5 V: measure the 5V pin and put the real value here
+float VS = 5.0;
+// internal reference, 1.0-1.2 V: calibrate it in Experiment 6
+const float BANDGAP = 1.1;
+// true: print only the voltage, for the Serial Plotter
+const bool PLOT = false;
 
-float readVcc() {                // measures the 1.1 V reference against the supply
+// measures the 1.1 V reference against the supply
+float readVcc() {
   ADMUX = _BV(REFS0) | _BV(MUX3) | _BV(MUX2) | _BV(MUX1);
   delay(2);                      // let the reference settle
   ADCSRA |= _BV(ADSC);
@@ -17,7 +21,8 @@ void setup() {
 
 void loop() {
   float vcc = readVcc();
-  analogRead(ADC_PIN);           // discard one reading after switching channels
+  // discard one reading after switching channels
+  analogRead(ADC_PIN);
   long sum = 0;
   for (int n = 0; n < 16; n++) sum += analogRead(ADC_PIN);
   float raw = sum / 16.0;
@@ -26,7 +31,9 @@ void loop() {
   else {
     Serial.print("raw "); Serial.print(raw, 1);
     Serial.print("   pin "); Serial.print(v, 3);
-    Serial.print(" V   supply (internal) "); Serial.print(vcc, 3); Serial.println(" V");
+    Serial.print(" V   supply (internal) ");
+    Serial.print(vcc, 3);
+    Serial.println(" V");
   }
   delay(500);
 }

@@ -1,5 +1,6 @@
 const int ADC_PIN = 34;
-const bool PLOT = false;         // true: print only the voltage, for the Serial Plotter
+// true: print only the voltage, for the Serial Plotter
+const bool PLOT = false;
 
 void setup() {
   Serial.begin(115200);
@@ -15,6 +16,7 @@ void loop() {
   float raw = sumRaw / 16.0;
   float v = sumMv / 16.0 / 1000.0;
   if (PLOT) Serial.printf("V:%.3f\n", v);
-  else Serial.printf("raw %6.1f   pin %.3f V   (raw x 3.3/4096 = %.3f V)\n", raw, v, raw * 3.3 / 4096.0);
+  else Serial.printf("raw %6.1f   pin %.3f V   (raw x 3.3/4096 = %.3f V)\n",
+                     raw, v, raw * 3.3 / 4096.0);
   delay(500);
 }

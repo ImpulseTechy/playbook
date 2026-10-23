@@ -9,11 +9,15 @@
 <div class="card"><span class="tag">Tinkercad Circuits</span><p>The potentiometer circuit with a virtual multimeter on the wiper: turn the knob and compare the meter with the Serial Monitor, as in Experiment 4.</p><a class="btn" href="https://www.tinkercad.com/things/2SVwKzBaKH7" target="_blank" rel="noopener">Open in Tinkercad</a></div>
 <h2>Code</h2><p class="lead">The sketches from the chapter, ready to copy into the Arduino IDE.</p>
 <div class="card"><div class="codehead"><h3>Arduino UNO</h3><span><button class="copy" data-target="code0">Copy</button> <a class="btn ghost" href="ch00-uno.ino" download>Download .ino</a></span></div><pre id="code0">const int ADC_PIN = A0;
-float VS = 5.0;                  // the UNO&#x27;s 5 V: measure the 5V pin and put the real value here
-const float BANDGAP = 1.1;       // internal reference, 1.0-1.2 V: calibrate it in Experiment 6
-const bool PLOT = false;         // true: print only the voltage, for the Serial Plotter
+// the UNO&#x27;s 5 V: measure the 5V pin and put the real value here
+float VS = 5.0;
+// internal reference, 1.0-1.2 V: calibrate it in Experiment 6
+const float BANDGAP = 1.1;
+// true: print only the voltage, for the Serial Plotter
+const bool PLOT = false;
 
-float readVcc() {                // measures the 1.1 V reference against the supply
+// measures the 1.1 V reference against the supply
+float readVcc() {
   ADMUX = _BV(REFS0) | _BV(MUX3) | _BV(MUX2) | _BV(MUX1);
   delay(2);                      // let the reference settle
   ADCSRA |= _BV(ADSC);
@@ -27,7 +31,8 @@ void setup() {
 
 void loop() {
   float vcc = readVcc();
-  analogRead(ADC_PIN);           // discard one reading after switching channels
+  // discard one reading after switching channels
+  analogRead(ADC_PIN);
   long sum = 0;
   for (int n = 0; n &lt; 16; n++) sum += analogRead(ADC_PIN);
   float raw = sum / 16.0;
@@ -36,13 +41,16 @@ void loop() {
   else {
     Serial.print(&quot;raw &quot;); Serial.print(raw, 1);
     Serial.print(&quot;   pin &quot;); Serial.print(v, 3);
-    Serial.print(&quot; V   supply (internal) &quot;); Serial.print(vcc, 3); Serial.println(&quot; V&quot;);
+    Serial.print(&quot; V   supply (internal) &quot;);
+    Serial.print(vcc, 3);
+    Serial.println(&quot; V&quot;);
   }
   delay(500);
 }
 </pre></div>
 <div class="card"><div class="codehead"><h3>ESP32</h3><span><button class="copy" data-target="code1">Copy</button> <a class="btn ghost" href="ch00-esp32.ino" download>Download .ino</a></span></div><pre id="code1">const int ADC_PIN = 34;
-const bool PLOT = false;         // true: print only the voltage, for the Serial Plotter
+// true: print only the voltage, for the Serial Plotter
+const bool PLOT = false;
 
 void setup() {
   Serial.begin(115200);
@@ -58,7 +66,8 @@ void loop() {
   float raw = sumRaw / 16.0;
   float v = sumMv / 16.0 / 1000.0;
   if (PLOT) Serial.printf(&quot;V:%.3f\n&quot;, v);
-  else Serial.printf(&quot;raw %6.1f   pin %.3f V   (raw x 3.3/4096 = %.3f V)\n&quot;, raw, v, raw * 3.3 / 4096.0);
+  else Serial.printf(&quot;raw %6.1f   pin %.3f V   (raw x 3.3/4096 = %.3f V)\n&quot;,
+                     raw, v, raw * 3.3 / 4096.0);
   delay(500);
 }
 </pre></div>
