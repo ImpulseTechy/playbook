@@ -9,8 +9,9 @@ void setup() {
   pinMode(SENSE_PIN, INPUT_PULLUP);  // HIGH = contact open, LOW = closed
 }
 
-// Waits until the sense pin reads 'level'; returns the time taken in microseconds,
-// or 0 if it timed out. Only the first change is timed; contact bounce comes later.
+// Waits until the sense pin reads 'level'. Returns the time taken in
+// microseconds, or 0 if it timed out. Only the first change is timed;
+// contact bounce comes later.
 unsigned long waitFor(int level, unsigned long t0) {
   while (digitalRead(SENSE_PIN) != level) {
     if (micros() - t0 > TIMEOUT_US) return 0;
