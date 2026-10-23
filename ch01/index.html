@@ -1,0 +1,44 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Chapter 1: The Voltage Divider</title><link rel="stylesheet" href="../assets/style.css"></head>
+<body><header class="top"><div><small>THE PRACTICAL ELECTRONICS PLAYBOOK · VOLUME 1</small><br>
+<a href="../index.html">Simulations, code and files</a></div></header>
+<main><p class="tag">Chapter 1</p><h1>The Voltage Divider</h1>
+<h2>Simulations</h2><p class="lead">Try the circuit on screen before you build it. Each simulation says what to try.</p>
+<div class="card"><span class="tag">Wokwi</span><p>Runs this chapter&#x27;s sketch on a simulated board.</p><a class="btn" href="https://wokwi.com/projects/478575260319410177" target="_blank" rel="noopener">Arduino UNO</a><a class="btn" href="https://wokwi.com/projects/478575271569587201" target="_blank" rel="noopener">ESP32</a></div>
+<h2>Code</h2><p class="lead">The sketches from the chapter, ready to copy into the Arduino IDE.</p>
+<div class="card"><div class="codehead"><h3>Arduino UNO</h3><span><button class="copy" data-target="code0">Copy</button> <a class="btn ghost" href="ch01-uno.ino" download>Download .ino</a></span></div><pre id="code0">const int   PIN   = A0;
+const float VREF  = 5.0;                    // measure your UNO&#x27;s 5V pin and put the real value here
+const float RATIO = (47.0 + 10.0) / 10.0;   // (R1 + R2) / R2 = 5.7
+
+void setup() {
+  Serial.begin(9600);
+}
+
+void loop() {
+  int   raw  = analogRead(PIN);             // 0 to 1023
+  float vpin = raw * VREF / 1024.0;         // pin voltage
+  float vin  = vpin * RATIO;                // back to battery volts
+  Serial.print(&quot;Pin: &quot;);      Serial.print(vpin, 3);
+  Serial.print(&quot; V   Battery: &quot;); Serial.print(vin, 2);
+  Serial.println(&quot; V&quot;);
+  delay(500);
+}
+</pre></div>
+<div class="card"><div class="codehead"><h3>ESP32</h3><span><button class="copy" data-target="code1">Copy</button> <a class="btn ghost" href="ch01-esp32.ino" download>Download .ino</a></span></div><pre id="code1">const int   PIN   = 34;                     // ADC1 pin, works with Wi-Fi on
+const float RATIO = (47.0 + 10.0) / 10.0;   // (R1 + R2) / R2 = 5.7
+
+void setup() {
+  Serial.begin(115200);
+}
+
+void loop() {
+  int   mv  = analogReadMilliVolts(PIN);    // calibrated pin voltage in mV
+  float vin = mv * RATIO / 1000.0;          // back to battery volts
+  Serial.printf(&quot;Pin: %4d mV   Battery: %5.2f V\n&quot;, mv, vin);
+  delay(500);
+}
+</pre></div>
+<p style="margin-top:2em;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap"><a href="../ch00/index.html">← Chapter 0</a> <a href="../index.html">All chapters</a> <a href="../ch02/index.html">Chapter 2 →</a></p></main>
+<footer>Companion to <em>The Practical Electronics Playbook</em> by Yogesh Bawane. Simulations run on third-party websites; their names are trademarks of their owners.</footer>
+<script src="../assets/copy.js"></script></body></html>
