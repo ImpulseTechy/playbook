@@ -1,0 +1,81 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Chapter 4: Pull-Up, Pull-Down and Button Debounce</title><link rel="stylesheet" href="../assets/style.css"></head>
+<body><header class="top"><div><small>THE PRACTICAL ELECTRONICS PLAYBOOK · VOLUME 1</small><br>
+<a href="../index.html">Simulations, code and files</a></div></header>
+<main><p class="tag">Chapter 4</p><h1>Pull-Up, Pull-Down and Button Debounce</h1>
+<h2>Simulations</h2><p class="lead">Try the circuit on screen before you build it. Each simulation says what to try.</p>
+<div class="card"><span class="tag">Wokwi</span><p>Runs this chapter&#x27;s sketch on a simulated board.</p><a class="btn" href="https://wokwi.com/projects/478575434027617281" target="_blank" rel="noopener">Arduino UNO</a><a class="btn" href="https://wokwi.com/projects/478575444835296257" target="_blank" rel="noopener">ESP32</a></div>
+<h2>Code</h2><p class="lead">The sketches from the chapter, ready to copy into the Arduino IDE.</p>
+<div class="card"><div class="codehead"><h3>Arduino UNO</h3><span><button class="copy" data-target="code0">Copy</button> <a class="btn ghost" href="ch04-uno.ino" download>Download .ino</a></span></div><pre id="code0">const int BUTTON_PIN = 2;
+const unsigned long DEBOUNCE_MS = 20;
+
+int lastReading = HIGH;          // pull-up: HIGH means released
+int stableState = HIGH;
+unsigned long lastChange = 0;
+int presses = 0;
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(BUTTON_PIN, INPUT);    // external 10 k pull-up fitted
+  // pinMode(BUTTON_PIN, INPUT_PULLUP);  // use this instead if you remove the resistor
+}
+
+void loop() {
+  int reading = digitalRead(BUTTON_PIN);
+  if (reading != lastReading) {          // the pin changed: restart the timer
+    lastChange = millis();
+    lastReading = reading;
+  }
+  if (millis() - lastChange &gt; DEBOUNCE_MS &amp;&amp; reading != stableState) {
+    stableState = reading;               // stable for 20 ms: accept it
+    if (stableState == LOW) {            // active-low: LOW means pressed
+      presses++;
+      Serial.print(&quot;Presses: &quot;);
+      Serial.println(presses);
+    }
+  }
+}
+</pre></div>
+<div class="card"><div class="codehead"><h3>ESP32</h3><span><button class="copy" data-target="code1">Copy</button> <a class="btn ghost" href="ch04-esp32.ino" download>Download .ino</a></span></div><pre id="code1">const int BUTTON_PIN = 27;              // not GPIO 34-39: they have no pull-ups
+const unsigned long DEBOUNCE_MS = 20;
+
+int lastReading = HIGH;
+int stableState = HIGH;
+unsigned long lastChange = 0;
+int presses = 0;
+
+void setup() {
+  Serial.begin(115200);
+  pinMode(BUTTON_PIN, INPUT);           // external 10 k pull-up to 3V3 fitted
+  // pinMode(BUTTON_PIN, INPUT_PULLUP); // use this instead if you remove the resistor
+}
+
+void loop() {
+  int reading = digitalRead(BUTTON_PIN);
+  if (reading != lastReading) {
+    lastChange = millis();
+    lastReading = reading;
+  }
+  if (millis() - lastChange &gt; DEBOUNCE_MS &amp;&amp; reading != stableState) {
+    stableState = reading;
+    if (stableState == LOW) {
+      presses++;
+      Serial.printf(&quot;Presses: %d\n&quot;, presses);
+    }
+  }
+}
+</pre></div>
+<div class="card"><div class="codehead"><h3>Experiment 2: count every edge, no debounce (replace loop() with this)</h3><span><button class="copy" data-target="code2">Copy</button> <a class="btn ghost" href="ch04-extra1.ino" download>Download .ino</a></span></div><pre id="code2">int last = HIGH;
+void loop() {                      // same code on the UNO and the ESP32
+  int r = digitalRead(BUTTON_PIN);
+  if (last == HIGH &amp;&amp; r == LOW) {  // every HIGH-to-LOW change counts
+    presses++;
+    Serial.println(presses);
+  }
+  last = r;
+}
+</pre></div>
+<p style="margin-top:2em;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap"><a href="../ch03/index.html">← Chapter 3</a> <a href="../index.html">All chapters</a> <a href="../ch05/index.html">Chapter 5 →</a></p></main>
+<footer>Companion to <em>The Practical Electronics Playbook</em> by Yogesh Bawane. Simulations run on third-party websites; their names are trademarks of their owners.</footer>
+<script src="../assets/copy.js"></script></body></html>
