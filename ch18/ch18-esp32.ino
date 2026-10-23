@@ -12,7 +12,11 @@ float squarePP(float f) {
   bool level = HIGH; digitalWrite(OUT_PIN, level);
   float vmin = 99, vmax = -99;
   while (micros() - t0 < run) {
-    if ((long)(micros() - next) >= 0) { level = !level; digitalWrite(OUT_PIN, level); next += half; }
+    if ((long)(micros() - next) >= 0) {
+      level = !level;
+      digitalWrite(OUT_PIN, level);
+      next += half;
+    }
     float v = readV();
     if (micros() - t0 > settle) { vmin = min(vmin, v); vmax = max(vmax, v); }
   }
@@ -27,8 +31,15 @@ void pwmTest(int duty) {
   delay(1000);
   float vmin = 99, vmax = -99, sum = 0; int n = 0;
   unsigned long t0 = millis();
-  while (millis() - t0 < 500) { float v = readV(); vmin = min(vmin, v); vmax = max(vmax, v); sum += v; n++; }
-  Serial.printf("PWM %d %%: average %.3f V, ripple %.0f mV p-p\n", duty, sum / n, (vmax - vmin) * 1000);
+  while (millis() - t0 < 500) {
+    float v = readV();
+    vmin = min(vmin, v);
+    vmax = max(vmax, v);
+    sum += v;
+    n++;
+  }
+  Serial.printf("PWM %d %%: average %.3f V, ripple %.0f mV p-p\n",
+                duty, sum / n, (vmax - vmin) * 1000);
   ledcDetach(OUT_PIN);                           // back to a plain GPIO
   pinMode(OUT_PIN, OUTPUT); digitalWrite(OUT_PIN, LOW);
 }
@@ -40,7 +51,8 @@ void setup() {
 
 void loop() {
   Serial.println("Part B: square wave through the filter");
-  for (float f : F_LIST) Serial.printf("%.0f Hz: %.2f V p-p\n", f, squarePP(f));
+  for (float f : F_LIST) Serial.printf("%.0f Hz: %.2f V p-p\n",
+       f, squarePP(f));
   Serial.println("Part A: PWM through the filter");
   pwmTest(25); pwmTest(50); pwmTest(75);
   Serial.println("Send any character to repeat.");
