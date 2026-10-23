@@ -1,8 +1,10 @@
 const int DRIVE_PIN = 8;
 const int SENSE_PIN = A0;
-const float VS = 5.0;              // measure your 5V pin and put the real value here
+// measure your 5V pin and put the real value here
+const float VS = 5.0;
 const unsigned long HALF_MS = 5000;  // 5 tau with 10 kOhm and 100 uF
-const bool PLOT = false;           // true: print only the voltage, for the Serial Plotter
+// true: print only the voltage, for the Serial Plotter
+const bool PLOT = false;
 
 float readCap() { return analogRead(SENSE_PIN) * VS / 1024.0; }
 

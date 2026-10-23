@@ -9,9 +9,11 @@
 <h2>Code</h2><p class="lead">The sketches from the chapter, ready to copy into the Arduino IDE.</p>
 <div class="card"><div class="codehead"><h3>Arduino UNO</h3><span><button class="copy" data-target="code0">Copy</button> <a class="btn ghost" href="ch17-uno.ino" download>Download .ino</a></span></div><pre id="code0">const int DRIVE_PIN = 8;
 const int SENSE_PIN = A0;
-const float VS = 5.0;              // measure your 5V pin and put the real value here
+// measure your 5V pin and put the real value here
+const float VS = 5.0;
 const unsigned long HALF_MS = 5000;  // 5 tau with 10 kOhm and 100 uF
-const bool PLOT = false;           // true: print only the voltage, for the Serial Plotter
+// true: print only the voltage, for the Serial Plotter
+const bool PLOT = false;
 
 float readCap() { return analogRead(SENSE_PIN) * VS / 1024.0; }
 
@@ -48,9 +50,11 @@ void loop() {
 </pre></div>
 <div class="card"><div class="codehead"><h3>ESP32</h3><span><button class="copy" data-target="code1">Copy</button> <a class="btn ghost" href="ch17-esp32.ino" download>Download .ino</a></span></div><pre id="code1">const int DRIVE_PIN = 25;
 const int SENSE_PIN = 34;
-const float VS = 3.3;              // measure your 3V3 pin and put the real value here
+// measure your 3V3 pin and put the real value here
+const float VS = 3.3;
 const unsigned long HALF_MS = 5000;  // 5 tau with 10 kOhm and 100 uF
-const bool PLOT = false;           // true: print only the voltage, for the Serial Plotter
+// true: print only the voltage, for the Serial Plotter
+const bool PLOT = false;
 
 float readCap() { return analogReadMilliVolts(SENSE_PIN) / 1000.0; }
 
