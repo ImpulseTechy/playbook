@@ -1,0 +1,71 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Chapter 13: PWM: Speed and Brightness</title><link rel="stylesheet" href="../assets/style.css"></head>
+<body><header class="top"><div><small>THE PRACTICAL ELECTRONICS PLAYBOOK · VOLUME 1</small><br>
+<a href="../index.html">Simulations, code and files</a></div></header>
+<main><p class="tag">Chapter 13</p><h1>PWM: Speed and Brightness</h1>
+<h2>Simulations</h2><p class="lead">Try the circuit on screen before you build it. Each simulation says what to try.</p>
+<div class="card"><span class="tag">Wokwi</span><p>Runs this chapter&#x27;s sketch on a simulated board.</p><a class="btn" href="https://wokwi.com/projects/478575763317332993" target="_blank" rel="noopener">Arduino UNO</a><a class="btn" href="https://wokwi.com/projects/478575774091456513" target="_blank" rel="noopener">ESP32</a></div>
+<div class="card"><span class="tag">Tinkercad Circuits</span><p>PWM speed control of a DC motor through the L293D on the Arduino UNO.</p><p class="soon">Coming soon.</p></div>
+<h2>Code</h2><p class="lead">The sketches from the chapter, ready to copy into the Arduino IDE.</p>
+<div class="card"><div class="codehead"><h3>Arduino UNO</h3><span><button class="copy" data-target="code0">Copy</button> <a class="btn ghost" href="ch13-uno.ino" download>Download .ino</a></span></div><pre id="code0">const int PWM_PIN = 9;   // Part A: LED resistor. Part B: L293D EN1.
+const int IN1 = 8;       // Part B: L293D 1A
+const int IN2 = 7;       // Part B: L293D 2A
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(PWM_PIN, OUTPUT);
+  analogWrite(PWM_PIN, 0);
+  pinMode(IN1, OUTPUT);
+  pinMode(IN2, OUTPUT);
+  digitalWrite(IN1, HIGH);   // Part B: forward
+  digitalWrite(IN2, LOW);
+  Serial.println(&quot;Type a duty cycle from 0 to 100 (%) and press Enter.&quot;);
+}
+
+void loop() {
+  if (Serial.available()) {
+    long pct = Serial.parseInt();
+    while (Serial.available()) Serial.read();   // discard the newline
+    pct = constrain(pct, 0, 100);
+    int value = (pct * 255 + 50) / 100;          // 0-100 % -&gt; 0-255, rounded
+    analogWrite(PWM_PIN, value);
+    Serial.print(&quot;Duty &quot;); Serial.print(pct);
+    Serial.print(&quot; % (value &quot;); Serial.print(value);
+    Serial.println(&quot; of 255)&quot;);
+  }
+}
+</pre></div>
+<div class="card"><div class="codehead"><h3>ESP32</h3><span><button class="copy" data-target="code1">Copy</button> <a class="btn ghost" href="ch13-esp32.ino" download>Download .ino</a></span></div><pre id="code1">const int PWM_PIN = 25;  // Part A: LED resistor. Part B: L293D EN1.
+const int IN1 = 26;      // Part B: L293D 1A
+const int IN2 = 27;      // Part B: L293D 2A
+const int FREQ = 1000;   // PWM frequency (Hz). Keep at or below 5000 for the L293D.
+const int RES  = 8;      // resolution (bits): duty values 0-255
+
+void setup() {
+  Serial.begin(115200);
+  ledcAttach(PWM_PIN, FREQ, RES);   // ESP32 Arduino core 3.x
+  ledcWrite(PWM_PIN, 0);
+  pinMode(IN1, OUTPUT);
+  pinMode(IN2, OUTPUT);
+  digitalWrite(IN1, HIGH);   // Part B: forward
+  digitalWrite(IN2, LOW);
+  Serial.println(&quot;Type a duty cycle from 0 to 100 (%) and press Enter.&quot;);
+}
+
+void loop() {
+  if (Serial.available()) {
+    long pct = Serial.parseInt();
+    while (Serial.available()) Serial.read();   // discard the newline
+    pct = constrain(pct, 0, 100);
+    int value = (pct * 255 + 50) / 100;          // 0-100 % -&gt; 0-255, rounded
+    ledcWrite(PWM_PIN, value);
+    Serial.print(&quot;Duty &quot;); Serial.print(pct);
+    Serial.print(&quot; % (value &quot;); Serial.print(value);
+    Serial.println(&quot; of 255)&quot;);
+  }
+}
+</pre></div>
+<p style="margin-top:2em;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap"><a href="../ch12/index.html">← Chapter 12</a> <a href="../index.html">All chapters</a> <a href="../ch14/index.html">Chapter 14 →</a></p></main>
+<footer>Companion to <em>The Practical Electronics Playbook</em> by Yogesh Bawane. Simulations run on third-party websites; their names are trademarks of their owners.</footer>
+<script src="../assets/copy.js"></script></body></html>
