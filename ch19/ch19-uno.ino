@@ -1,8 +1,10 @@
 const int DRIVE_PIN = 8;
 const int ADC_PIN = A0;
-const float VS = 5.0;        // measure your 5V pin and put the real value here
+// measure your 5V pin and put the real value here
+const float VS = 5.0;
 const float F_LIST[] = {2, 10, 50, 200};
-const bool PLOT = false;     // true: 2 Hz square wave and TP3 in the Serial Plotter
+// true: 2 Hz square wave and TP3 in the Serial Plotter
+const bool PLOT = false;
 
 float readV() { return analogRead(ADC_PIN) * VS / 1024.0; }
 
@@ -25,9 +27,18 @@ void loop() {
   Serial.print("Bias: "); Serial.print(bias, 3); Serial.println(" V");
 
   digitalWrite(DRIVE_PIN, HIGH);                       // a DC input
-  float v0 = readV(); delay(15); float v15 = readV(); delay(185); float v200 = readV();
-  Serial.print("Input held HIGH: TP3 = "); Serial.print(v0, 2); Serial.print(" V at once, ");
-  Serial.print(v15, 2); Serial.print(" V after 15 ms, "); Serial.print(v200, 2); Serial.println(" V after 200 ms");
+  float v0 = readV();
+  delay(15);
+  float v15 = readV();
+  delay(185);
+  float v200 = readV();
+  Serial.print("Input held HIGH: TP3 = ");
+  Serial.print(v0, 2);
+  Serial.print(" V at once, ");
+  Serial.print(v15, 2);
+  Serial.print(" V after 15 ms, ");
+  Serial.print(v200, 2);
+  Serial.println(" V after 200 ms");
   digitalWrite(DRIVE_PIN, LOW); delay(200);
 
   for (float f : F_LIST) {
@@ -37,9 +48,11 @@ void loop() {
     for (int c = 0; c < cycles; c++) {
       unsigned long t0 = micros();
       digitalWrite(DRIVE_PIN, HIGH);
-      float a = readV();                               // just after the rising edge
+      // just after the rising edge
+      float a = readV();
       while (micros() - t0 < half - 300) {}
-      float b = readV();                               // just before the falling edge
+      // just before the falling edge
+      float b = readV();
       while (micros() - t0 < half) {}
       digitalWrite(DRIVE_PIN, LOW);
       while (micros() - t0 < 2 * half) {}

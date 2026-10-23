@@ -9,9 +9,11 @@
 <h2>Code</h2><p class="lead">The sketches from the chapter, ready to copy into the Arduino IDE.</p>
 <div class="card"><div class="codehead"><h3>Arduino UNO</h3><span><button class="copy" data-target="code0">Copy</button> <a class="btn ghost" href="ch19-uno.ino" download>Download .ino</a></span></div><pre id="code0">const int DRIVE_PIN = 8;
 const int ADC_PIN = A0;
-const float VS = 5.0;        // measure your 5V pin and put the real value here
+// measure your 5V pin and put the real value here
+const float VS = 5.0;
 const float F_LIST[] = {2, 10, 50, 200};
-const bool PLOT = false;     // true: 2 Hz square wave and TP3 in the Serial Plotter
+// true: 2 Hz square wave and TP3 in the Serial Plotter
+const bool PLOT = false;
 
 float readV() { return analogRead(ADC_PIN) * VS / 1024.0; }
 
@@ -34,9 +36,18 @@ void loop() {
   Serial.print(&quot;Bias: &quot;); Serial.print(bias, 3); Serial.println(&quot; V&quot;);
 
   digitalWrite(DRIVE_PIN, HIGH);                       // a DC input
-  float v0 = readV(); delay(15); float v15 = readV(); delay(185); float v200 = readV();
-  Serial.print(&quot;Input held HIGH: TP3 = &quot;); Serial.print(v0, 2); Serial.print(&quot; V at once, &quot;);
-  Serial.print(v15, 2); Serial.print(&quot; V after 15 ms, &quot;); Serial.print(v200, 2); Serial.println(&quot; V after 200 ms&quot;);
+  float v0 = readV();
+  delay(15);
+  float v15 = readV();
+  delay(185);
+  float v200 = readV();
+  Serial.print(&quot;Input held HIGH: TP3 = &quot;);
+  Serial.print(v0, 2);
+  Serial.print(&quot; V at once, &quot;);
+  Serial.print(v15, 2);
+  Serial.print(&quot; V after 15 ms, &quot;);
+  Serial.print(v200, 2);
+  Serial.println(&quot; V after 200 ms&quot;);
   digitalWrite(DRIVE_PIN, LOW); delay(200);
 
   for (float f : F_LIST) {
@@ -46,9 +57,11 @@ void loop() {
     for (int c = 0; c &lt; cycles; c++) {
       unsigned long t0 = micros();
       digitalWrite(DRIVE_PIN, HIGH);
-      float a = readV();                               // just after the rising edge
+      // just after the rising edge
+      float a = readV();
       while (micros() - t0 &lt; half - 300) {}
-      float b = readV();                               // just before the falling edge
+      // just before the falling edge
+      float b = readV();
       while (micros() - t0 &lt; half) {}
       digitalWrite(DRIVE_PIN, LOW);
       while (micros() - t0 &lt; 2 * half) {}
@@ -66,7 +79,8 @@ void loop() {
 <div class="card"><div class="codehead"><h3>ESP32</h3><span><button class="copy" data-target="code1">Copy</button> <a class="btn ghost" href="ch19-esp32.ino" download>Download .ino</a></span></div><pre id="code1">const int DRIVE_PIN = 25;
 const int ADC_PIN = 34;
 const float F_LIST[] = {2, 10, 50, 200};
-const bool PLOT = false;     // true: 2 Hz square wave and TP3 in the Serial Plotter
+// true: 2 Hz square wave and TP3 in the Serial Plotter
+const bool PLOT = false;
 
 float readV() { return analogReadMilliVolts(ADC_PIN) / 1000.0; }
 
@@ -89,8 +103,13 @@ void loop() {
   Serial.printf(&quot;Bias: %.3f V\n&quot;, bias);
 
   digitalWrite(DRIVE_PIN, HIGH);                       // a DC input
-  float v0 = readV(); delay(15); float v15 = readV(); delay(185); float v200 = readV();
-  Serial.printf(&quot;Input held HIGH: TP3 = %.2f V at once, %.2f V after 15 ms, %.2f V after 200 ms\n&quot;, v0, v15, v200);
+  float v0 = readV();
+  delay(15);
+  float v15 = readV();
+  delay(185);
+  float v200 = readV();
+  Serial.printf(&quot;Input held HIGH: TP3 = %.2f V at once, &quot;, v0);
+  Serial.printf(&quot;%.2f V after 15 ms, %.2f V after 200 ms\n&quot;, v15, v200);
   digitalWrite(DRIVE_PIN, LOW); delay(200);
 
   for (float f : F_LIST) {
@@ -100,16 +119,19 @@ void loop() {
     for (int c = 0; c &lt; cycles; c++) {
       unsigned long t0 = micros();
       digitalWrite(DRIVE_PIN, HIGH);
-      float a = readV();                               // just after the rising edge
+      // just after the rising edge
+      float a = readV();
       while (micros() - t0 &lt; half - 300) {}
-      float b = readV();                               // just before the falling edge
+      // just before the falling edge
+      float b = readV();
       while (micros() - t0 &lt; half) {}
       digitalWrite(DRIVE_PIN, LOW);
       while (micros() - t0 &lt; 2 * half) {}
       if (c &gt;= 3) { sumA += a - bias; sumB += b - bias; n++; }
     }
     float A = sumA / n, B = sumB / n;
-    Serial.printf(&quot;%.0f Hz: after edge +%.2f V, before next edge +%.2f V, k = %.3f\n&quot;, f, A, B, B / A);
+    Serial.printf(&quot;%.0f Hz: after edge +%.2f V, &quot;, f, A);
+    Serial.printf(&quot;before next edge +%.2f V, k = %.3f\n&quot;, B, B / A);
   }
   Serial.println();
   delay(3000);
