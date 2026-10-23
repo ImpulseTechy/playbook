@@ -6,7 +6,7 @@
 <main><p class="tag">Chapter 12</p><h1>The H-Bridge</h1>
 <h2>Simulations</h2><p class="lead">Try the circuit on screen before you build it. Each simulation says what to try.</p>
 <div class="card"><span class="tag">Wokwi</span><p>Runs this chapter&#x27;s sketch on a simulated board.</p><a class="btn" href="https://wokwi.com/projects/478575741130501121" target="_blank" rel="noopener">Arduino UNO</a><a class="btn" href="https://wokwi.com/projects/478575752059810817" target="_blank" rel="noopener">ESP32</a></div>
-<div class="card"><span class="tag">Tinkercad Circuits</span><p>The L293D driving a DC motor from the Arduino UNO, with the chapter&#x27;s code.</p><p class="soon">Coming soon.</p></div>
+<div class="card"><span class="tag">Tinkercad Circuits</span><p>The L293D driving a DC motor from the Arduino UNO, with the chapter&#x27;s code and a virtual multimeter across the motor: watch the sign of the voltage flip between Forward and Reverse. Tinkercad&#x27;s motor has no back-EMF, so in Coast it reads 0 V at once; a real motor shows a falling voltage as it spins down.</p><a class="btn" href="https://www.tinkercad.com/things/0Ut73Qnwim9" target="_blank" rel="noopener">Open in Tinkercad</a></div>
 <h2>Code</h2><p class="lead">The sketches from the chapter, ready to copy into the Arduino IDE.</p>
 <div class="card"><div class="codehead"><h3>Arduino UNO</h3><span><button class="copy" data-target="code0">Copy</button> <a class="btn ghost" href="ch12-uno.ino" download>Download .ino</a></span></div><pre id="code0">const int EN  = 9;   // EN1: HIGH = outputs on, LOW = coast
 const int IN1 = 8;   // 1A
