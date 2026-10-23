@@ -1,4 +1,5 @@
-const float VS = 5.0;    // measure TP1 with your meter and put the real value here
+// measure TP1 with your meter and put the real value here
+const float VS = 5.0;
 const float R1 = 1000.0, R2 = 2200.0, R3 = 4700.0;
 
 void setup() {
