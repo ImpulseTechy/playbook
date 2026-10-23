@@ -1,5 +1,6 @@
 const int   PIN   = A0;
-const float VREF  = 5.0;                    // measure your UNO's 5V pin and put the real value here
+// measure your UNO's 5V pin and put the real value here
+const float VREF  = 5.0;
 const float RATIO = (47.0 + 10.0) / 10.0;   // (R1 + R2) / R2 = 5.7
 
 void setup() {
