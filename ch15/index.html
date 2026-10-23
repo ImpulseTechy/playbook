@@ -1,0 +1,47 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Chapter 15: Zener Diodes, Clamps and Input Protection</title><link rel="stylesheet" href="../assets/style.css"></head>
+<body><header class="top"><div><small>THE PRACTICAL ELECTRONICS PLAYBOOK · VOLUME 1</small><br>
+<a href="../index.html">Simulations, code and files</a></div></header>
+<main><p class="tag">Chapter 15</p><h1>Zener Diodes, Clamps and Input Protection</h1>
+<h2>Simulations</h2><p class="lead">Try the circuit on screen before you build it. Each simulation says what to try.</p>
+<div class="card"><span class="tag">Wokwi</span><p>Runs this chapter&#x27;s sketch on a simulated board.</p><a class="btn" href="https://wokwi.com/projects/478576371924685825" target="_blank" rel="noopener">Arduino UNO</a><a class="btn" href="https://wokwi.com/projects/478576382942078977" target="_blank" rel="noopener">ESP32</a></div>
+<div class="card"><span class="tag">Falstad CircuitJS</span><p>A −5 V to +10 V signal through 10 kΩ into the two Schottky clamps. The scopes show the input and the pin: the pin never leaves about −0.4 V to 3.7 V.</p><a class="btn" href="https://www.falstad.com/circuit/circuitjs.html?ctz=CQAgjCAMB0l5EyRAVmU1kBQAlEBOANnEOUIBYTlkBmcZAdmhRACZmopmsAnA4sKTbl0Q9PGwB3YaNo0BYrABMQNeVVXqibcADkUDMGFybi2tcXIAOTshGrodalxTLTbFMQsbWeg0awAc3dWTxCrG2w+VntBZBj4sPEJIJkPYgS2CKgsVkgGNLjCsF9KAAcASwA7LAB7TgpOGkoMGEgWZABaCGqygFcAFzqQAsbaFupYFghukEqagA9VIRK7BnRWOhbfAdqAHQBnGkdDgDUsJfl4vJBydbZN2-Ad-YOAcV0AESwgA" target="_blank" rel="noopener">Open in Falstad</a></div>
+<h2>Code</h2><p class="lead">The sketches from the chapter, ready to copy into the Arduino IDE.</p>
+<div class="card"><div class="codehead"><h3>Arduino UNO</h3><span><button class="copy" data-target="code0">Copy</button> <a class="btn ghost" href="ch15-uno.ino" download>Download .ino</a></span></div><pre id="code0">const int IN_PIN = 2;    // the protected node, through column 8
+int last = -1;
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(IN_PIN, INPUT);   // the 100 kOhm pull-down holds it LOW
+}
+
+void loop() {
+  int now = digitalRead(IN_PIN);
+  if (now != last) {
+    Serial.println(now == HIGH ? &quot;Signal HIGH&quot; : &quot;Signal LOW&quot;);
+    last = now;
+  }
+  delay(20);
+}
+</pre></div>
+<div class="card"><div class="codehead"><h3>ESP32</h3><span><button class="copy" data-target="code1">Copy</button> <a class="btn ghost" href="ch15-esp32.ino" download>Download .ino</a></span></div><pre id="code1">const int IN_PIN = 27;   // the protected node, through column 8
+int last = -1;
+
+void setup() {
+  Serial.begin(115200);
+  pinMode(IN_PIN, INPUT);   // the 100 kOhm pull-down holds it LOW
+}
+
+void loop() {
+  int now = digitalRead(IN_PIN);
+  if (now != last) {
+    Serial.println(now == HIGH ? &quot;Signal HIGH&quot; : &quot;Signal LOW&quot;);
+    last = now;
+  }
+  delay(20);
+}
+</pre></div>
+<p style="margin-top:2em;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap"><a href="../ch14/index.html">← Chapter 14</a> <a href="../index.html">All chapters</a> <a href="../ch16/index.html">Chapter 16 →</a></p></main>
+<footer>Companion to <em>The Practical Electronics Playbook</em> by Yogesh Bawane. Simulations run on third-party websites; their names are trademarks of their owners.</footer>
+<script src="../assets/copy.js"></script></body></html>
