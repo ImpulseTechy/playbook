@@ -17,7 +17,10 @@ void loop() {
   }
   unsigned long th = pulseIn(OUT_PIN, HIGH, 3000000UL);   // up to 3 s
   unsigned long tl = pulseIn(OUT_PIN, LOW, 3000000UL);
-  if (th == 0 || tl == 0) { Serial.println("No signal: check the wiring"); return; }
+  if (th == 0 || tl == 0) {
+    Serial.println("No signal: check the wiring");
+    return;
+  }
   float f = 1e6 / (th + tl);
   float vmin = 99, vmax = 0;
   unsigned long t0 = micros();

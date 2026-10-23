@@ -26,7 +26,10 @@ void loop() {
   }
   unsigned long th = pulseIn(OUT_PIN, HIGH, 3000000UL);   // up to 3 s
   unsigned long tl = pulseIn(OUT_PIN, LOW, 3000000UL);
-  if (th == 0 || tl == 0) { Serial.println(&quot;No signal: check the wiring&quot;); return; }
+  if (th == 0 || tl == 0) {
+    Serial.println(&quot;No signal: check the wiring&quot;);
+    return;
+  }
   float f = 1e6 / (th + tl);
   float vmin = 99, vmax = 0;
   unsigned long t0 = micros();
@@ -42,7 +45,8 @@ void loop() {
   Serial.print(&quot;-&quot;); Serial.print(vmax, 2); Serial.println(&quot; V&quot;);
 }
 </pre></div>
-<div class="card"><div class="codehead"><h3>ESP32</h3><span><button class="copy" data-target="code1">Copy</button> <a class="btn ghost" href="ch20-esp32.ino" download>Download .ino</a></span></div><pre id="code1">const int OUT_PIN = 27;    // 555 pin 3, through 10 kOhm with a 1N5819 clamp to 3V3
+<div class="card"><div class="codehead"><h3>ESP32</h3><span><button class="copy" data-target="code1">Copy</button> <a class="btn ghost" href="ch20-esp32.ino" download>Download .ino</a></span></div><pre id="code1">// 555 pin 3, through 10 kOhm with a 1N5819 clamp to 3V3
+const int OUT_PIN = 27;
 
 void setup() {
   Serial.begin(115200);
@@ -52,7 +56,10 @@ void setup() {
 void loop() {
   unsigned long th = pulseIn(OUT_PIN, HIGH, 3000000UL);   // up to 3 s
   unsigned long tl = pulseIn(OUT_PIN, LOW, 3000000UL);
-  if (th == 0 || tl == 0) { Serial.println(&quot;No signal: check the wiring&quot;); return; }
+  if (th == 0 || tl == 0) {
+    Serial.println(&quot;No signal: check the wiring&quot;);
+    return;
+  }
   float f = 1e6 / (th + tl);
   Serial.printf(&quot;tH = %.1f ms, tL = %.1f ms, f = %.2f Hz, duty = %.1f %%\n&quot;,
                 th / 1000.0, tl / 1000.0, f, 100.0 * th / (th + tl));
