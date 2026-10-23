@@ -1,0 +1,88 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Chapter 16: The Shift Register: More Outputs from Few Pins</title><link rel="stylesheet" href="../assets/style.css"></head>
+<body><header class="top"><div><small>THE PRACTICAL ELECTRONICS PLAYBOOK · VOLUME 1</small><br>
+<a href="../index.html">Simulations, code and files</a></div></header>
+<main><p class="tag">Chapter 16</p><h1>The Shift Register: More Outputs from Few Pins</h1>
+<h2>Simulations</h2><p class="lead">Try the circuit on screen before you build it. Each simulation says what to try.</p>
+<div class="card"><span class="tag">Wokwi</span><p>Runs this chapter&#x27;s sketch on a simulated board.</p><a class="btn" href="https://wokwi.com/projects/478577546788406273" target="_blank" rel="noopener">Arduino UNO</a><a class="btn" href="https://wokwi.com/projects/478577631233397761" target="_blank" rel="noopener">ESP32</a></div>
+<h2>Code</h2><p class="lead">The sketches from the chapter, ready to copy into the Arduino IDE.</p>
+<div class="card"><div class="codehead"><h3>Arduino UNO</h3><span><button class="copy" data-target="code0">Copy</button> <a class="btn ghost" href="ch16-uno.ino" download>Download .ino</a></span></div><pre id="code0">const int DATA_PIN  = 11;  // SER   (pin 14)
+const int CLOCK_PIN = 13;  // SRCLK (pin 11)
+const int LATCH_PIN = 10;  // RCLK  (pin 12)
+bool hold = false;
+
+void write595(byte value) {
+  digitalWrite(LATCH_PIN, LOW);
+  shiftOut(DATA_PIN, CLOCK_PIN, MSBFIRST, value);  // QH first, QA last
+  digitalWrite(LATCH_PIN, HIGH);                   // rising edge: all 8 outputs update together
+}
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(DATA_PIN, OUTPUT);
+  pinMode(CLOCK_PIN, OUTPUT);
+  pinMode(LATCH_PIN, OUTPUT);
+  write595(0);
+  unsigned long t0 = micros();
+  write595(0b10101010);
+  unsigned long dt = micros() - t0;
+  Serial.print(&quot;One update took &quot;); Serial.print(dt); Serial.println(&quot; us&quot;);
+}
+
+void loop() {
+  if (Serial.available()) {
+    long v = Serial.parseInt();
+    while (Serial.available()) Serial.read();
+    hold = (v &gt;= 0);
+    if (hold) {
+      write595((byte)constrain(v, 0, 255));
+      Serial.print(&quot;Holding &quot;); Serial.println((byte)constrain(v, 0, 255), BIN);
+    }
+  }
+  if (hold) return;
+  for (int k = 0; k &lt; 8 &amp;&amp; !Serial.available(); k++) { write595(1 &lt;&lt; k); delay(150); }
+  for (int n = 0; n &lt; 256 &amp;&amp; !Serial.available(); n++) { write595(n); delay(40); }
+}
+</pre></div>
+<div class="card"><div class="codehead"><h3>ESP32</h3><span><button class="copy" data-target="code1">Copy</button> <a class="btn ghost" href="ch16-esp32.ino" download>Download .ino</a></span></div><pre id="code1">const int DATA_PIN  = 23;  // SER   (pin 14)
+const int CLOCK_PIN = 18;  // SRCLK (pin 11)
+const int LATCH_PIN = 5;   // RCLK  (pin 12)
+bool hold = false;
+
+void write595(byte value) {
+  digitalWrite(LATCH_PIN, LOW);
+  shiftOut(DATA_PIN, CLOCK_PIN, MSBFIRST, value);  // QH first, QA last
+  digitalWrite(LATCH_PIN, HIGH);                   // rising edge: all 8 outputs update together
+}
+
+void setup() {
+  Serial.begin(115200);
+  pinMode(DATA_PIN, OUTPUT);
+  pinMode(CLOCK_PIN, OUTPUT);
+  pinMode(LATCH_PIN, OUTPUT);
+  write595(0);
+  unsigned long t0 = micros();
+  write595(0b10101010);
+  unsigned long dt = micros() - t0;
+  Serial.printf(&quot;One update took %lu us\n&quot;, dt);
+}
+
+void loop() {
+  if (Serial.available()) {
+    long v = Serial.parseInt();
+    while (Serial.available()) Serial.read();
+    hold = (v &gt;= 0);
+    if (hold) {
+      write595((byte)constrain(v, 0, 255));
+      Serial.printf(&quot;Holding %d\n&quot;, (int)constrain(v, 0, 255));
+    }
+  }
+  if (hold) return;
+  for (int k = 0; k &lt; 8 &amp;&amp; !Serial.available(); k++) { write595(1 &lt;&lt; k); delay(150); }
+  for (int n = 0; n &lt; 256 &amp;&amp; !Serial.available(); n++) { write595(n); delay(40); }
+}
+</pre></div>
+<p style="margin-top:2em;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap"><a href="../ch15/index.html">← Chapter 15</a> <a href="../index.html">All chapters</a> <a href="../ch17/index.html">Chapter 17 →</a></p></main>
+<footer>Companion to <em>The Practical Electronics Playbook</em> by Yogesh Bawane. Simulations run on third-party websites; their names are trademarks of their owners.</footer>
+<script src="../assets/copy.js"></script></body></html>
