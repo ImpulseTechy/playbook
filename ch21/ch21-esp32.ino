@@ -1,7 +1,8 @@
 const int OUT_PIN = 25;
 const int ADC_PIN = 34;
 const float C_TANK = 100e-9;     // the tank capacitor fitted (F)
-const bool PLOT = false;         // true: print only the detector voltage, for the Serial Plotter
+// true: print only the detector voltage, for the Serial Plotter
+const bool PLOT = false;
 
 float readDet() {
   long sum = 0;
@@ -21,12 +22,14 @@ void sweep() {
   }
   ledcWriteTone(OUT_PIN, 0);                  // stop
   float Lcalc = 1.0 / (pow(2 * PI * fBest, 2) * C_TANK);
-  Serial.printf("Peak at about %.0f Hz (%.3f V): L = %.2f mH\n", fBest, best, Lcalc * 1000);
+  Serial.printf("Peak at about %.0f Hz (%.3f V): L = %.2f mH\n",
+                fBest, best, Lcalc * 1000);
 }
 
 void setup() {
   Serial.begin(115200);
-  analogSetPinAttenuation(ADC_PIN, ADC_0db);  // 0 dB: about 0.1-0.95 V, best for small signals
+  // 0 dB: about 0.1-0.95 V, best for small signals
+  analogSetPinAttenuation(ADC_PIN, ADC_0db);
   ledcAttach(OUT_PIN, 1000, 8);               // ESP32 Arduino core 3.x
   sweep();
 }

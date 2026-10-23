@@ -1,8 +1,10 @@
 const int OUT_PIN = 8;
 const int ADC_PIN = A0;
-const float VS = 5.0;            // measure your 5V pin and put the real value here
+// measure your 5V pin and put the real value here
+const float VS = 5.0;
 const float C_TANK = 100e-9;     // the tank capacitor fitted (F)
-const bool PLOT = false;         // true: print only the detector voltage, for the Serial Plotter
+// true: print only the detector voltage, for the Serial Plotter
+const bool PLOT = false;
 
 float readDet() {
   long sum = 0;
@@ -14,16 +16,25 @@ void sweep() {
   float best = 0, fBest = 0;
   for (float f = 800; f <= 16000; f *= 1.04) {
     tone(OUT_PIN, (unsigned int)f);
-    delay(40);                               // let the detector settle (4 x 10 ms)
+    // let the detector settle (4 x 10 ms)
+    delay(40);
     float v = readDet();
     if (PLOT) { Serial.print("det:"); Serial.println(v, 3); }
-    else { Serial.print(f, 0); Serial.print(" Hz: "); Serial.print(v, 3); Serial.println(" V"); }
+    else {
+      Serial.print(f, 0); Serial.print(" Hz: ");
+      Serial.print(v, 3); Serial.println(" V");
+    }
     if (v > best) { best = v; fBest = f; }
   }
   noTone(OUT_PIN);
   float Lcalc = 1.0 / (sq(2 * PI * fBest) * C_TANK);
-  Serial.print("Peak at about "); Serial.print(fBest, 0); Serial.print(" Hz ("); Serial.print(best, 3);
-  Serial.print(" V): L = "); Serial.print(Lcalc * 1000, 2); Serial.println(" mH");
+  Serial.print("Peak at about ");
+  Serial.print(fBest, 0);
+  Serial.print(" Hz (");
+  Serial.print(best, 3);
+  Serial.print(" V): L = ");
+  Serial.print(Lcalc * 1000, 2);
+  Serial.println(" mH");
 }
 
 void setup() {

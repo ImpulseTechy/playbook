@@ -10,9 +10,11 @@
 <h2>Code</h2><p class="lead">The sketches from the chapter, ready to copy into the Arduino IDE.</p>
 <div class="card"><div class="codehead"><h3>Arduino UNO</h3><span><button class="copy" data-target="code0">Copy</button> <a class="btn ghost" href="ch21-uno.ino" download>Download .ino</a></span></div><pre id="code0">const int OUT_PIN = 8;
 const int ADC_PIN = A0;
-const float VS = 5.0;            // measure your 5V pin and put the real value here
+// measure your 5V pin and put the real value here
+const float VS = 5.0;
 const float C_TANK = 100e-9;     // the tank capacitor fitted (F)
-const bool PLOT = false;         // true: print only the detector voltage, for the Serial Plotter
+// true: print only the detector voltage, for the Serial Plotter
+const bool PLOT = false;
 
 float readDet() {
   long sum = 0;
@@ -24,16 +26,25 @@ void sweep() {
   float best = 0, fBest = 0;
   for (float f = 800; f &lt;= 16000; f *= 1.04) {
     tone(OUT_PIN, (unsigned int)f);
-    delay(40);                               // let the detector settle (4 x 10 ms)
+    // let the detector settle (4 x 10 ms)
+    delay(40);
     float v = readDet();
     if (PLOT) { Serial.print(&quot;det:&quot;); Serial.println(v, 3); }
-    else { Serial.print(f, 0); Serial.print(&quot; Hz: &quot;); Serial.print(v, 3); Serial.println(&quot; V&quot;); }
+    else {
+      Serial.print(f, 0); Serial.print(&quot; Hz: &quot;);
+      Serial.print(v, 3); Serial.println(&quot; V&quot;);
+    }
     if (v &gt; best) { best = v; fBest = f; }
   }
   noTone(OUT_PIN);
   float Lcalc = 1.0 / (sq(2 * PI * fBest) * C_TANK);
-  Serial.print(&quot;Peak at about &quot;); Serial.print(fBest, 0); Serial.print(&quot; Hz (&quot;); Serial.print(best, 3);
-  Serial.print(&quot; V): L = &quot;); Serial.print(Lcalc * 1000, 2); Serial.println(&quot; mH&quot;);
+  Serial.print(&quot;Peak at about &quot;);
+  Serial.print(fBest, 0);
+  Serial.print(&quot; Hz (&quot;);
+  Serial.print(best, 3);
+  Serial.print(&quot; V): L = &quot;);
+  Serial.print(Lcalc * 1000, 2);
+  Serial.println(&quot; mH&quot;);
 }
 
 void setup() {
@@ -51,7 +62,8 @@ void loop() {
 <div class="card"><div class="codehead"><h3>ESP32</h3><span><button class="copy" data-target="code1">Copy</button> <a class="btn ghost" href="ch21-esp32.ino" download>Download .ino</a></span></div><pre id="code1">const int OUT_PIN = 25;
 const int ADC_PIN = 34;
 const float C_TANK = 100e-9;     // the tank capacitor fitted (F)
-const bool PLOT = false;         // true: print only the detector voltage, for the Serial Plotter
+// true: print only the detector voltage, for the Serial Plotter
+const bool PLOT = false;
 
 float readDet() {
   long sum = 0;
@@ -71,12 +83,14 @@ void sweep() {
   }
   ledcWriteTone(OUT_PIN, 0);                  // stop
   float Lcalc = 1.0 / (pow(2 * PI * fBest, 2) * C_TANK);
-  Serial.printf(&quot;Peak at about %.0f Hz (%.3f V): L = %.2f mH\n&quot;, fBest, best, Lcalc * 1000);
+  Serial.printf(&quot;Peak at about %.0f Hz (%.3f V): L = %.2f mH\n&quot;,
+                fBest, best, Lcalc * 1000);
 }
 
 void setup() {
   Serial.begin(115200);
-  analogSetPinAttenuation(ADC_PIN, ADC_0db);  // 0 dB: about 0.1-0.95 V, best for small signals
+  // 0 dB: about 0.1-0.95 V, best for small signals
+  analogSetPinAttenuation(ADC_PIN, ADC_0db);
   ledcAttach(OUT_PIN, 1000, 8);               // ESP32 Arduino core 3.x
   sweep();
 }
