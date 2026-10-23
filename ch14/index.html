@@ -28,7 +28,8 @@ void loop() {
   // Part A: the opto pulls the pin LOW when the isolated input is ON
   bool input = digitalRead(IN_PIN);
   if (input != lastInput) {
-    Serial.println(input == LOW ? &quot;Input ON  (pin LOW)&quot; : &quot;Input OFF (pin HIGH)&quot;);
+    Serial.println(input == LOW ? &quot;Input ON  (pin LOW)&quot;
+                                : &quot;Input OFF (pin HIGH)&quot;);
     lastInput = input;
   }
   digitalWrite(LED_PIN, input == LOW ? HIGH : LOW);
@@ -62,7 +63,8 @@ void loop() {
   // Part A: the opto pulls the pin LOW when the isolated input is ON
   bool input = digitalRead(IN_PIN);
   if (input != lastInput) {
-    Serial.println(input == LOW ? &quot;Input ON  (pin LOW)&quot; : &quot;Input OFF (pin HIGH)&quot;);
+    Serial.println(input == LOW ? &quot;Input ON  (pin LOW)&quot;
+                                : &quot;Input OFF (pin HIGH)&quot;);
     lastInput = input;
   }
   digitalWrite(LED_PIN, input == LOW ? HIGH : LOW);
