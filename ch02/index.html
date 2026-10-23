@@ -1,0 +1,32 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Chapter 2: Ohm&#x27;s Law and the Current-Limiting Resistor</title><link rel="stylesheet" href="../assets/style.css"></head>
+<body><header class="top"><div><small>THE PRACTICAL ELECTRONICS PLAYBOOK · VOLUME 1</small><br>
+<a href="../index.html">Simulations, code and files</a></div></header>
+<main><p class="tag">Chapter 2</p><h1>Ohm&#x27;s Law and the Current-Limiting Resistor</h1>
+<h2>Simulations</h2><p class="lead">Try the circuit on screen before you build it. Each simulation says what to try.</p>
+<div class="card"><span class="tag">Wokwi</span><p>Runs this chapter&#x27;s sketch on a simulated board.</p><a class="btn" href="https://wokwi.com/projects/478575334520869889" target="_blank" rel="noopener">Arduino UNO</a><a class="btn" href="https://wokwi.com/projects/478575345563427841" target="_blank" rel="noopener">ESP32</a></div>
+<h2>Code</h2><p class="lead">The sketches from the chapter, ready to copy into the Arduino IDE.</p>
+<div class="card"><div class="codehead"><h3>Arduino UNO</h3><span><button class="copy" data-target="code0">Copy</button> <a class="btn ghost" href="ch02-uno.ino" download>Download .ino</a></span></div><pre id="code0">const int LED_PIN = 8;
+
+void setup() {
+  pinMode(LED_PIN, OUTPUT);     // without this line the LED glows only faintly
+  digitalWrite(LED_PIN, HIGH);  // LED on, steady, for measuring
+}
+
+void loop() {
+}
+</pre></div>
+<div class="card"><div class="codehead"><h3>ESP32</h3><span><button class="copy" data-target="code1">Copy</button> <a class="btn ghost" href="ch02-esp32.ino" download>Download .ino</a></span></div><pre id="code1">const int LED_PIN = 25;
+
+void setup() {
+  pinMode(LED_PIN, OUTPUT);
+  digitalWrite(LED_PIN, HIGH);  // LED on, steady, for measuring
+}
+
+void loop() {
+}
+</pre></div>
+<p style="margin-top:2em;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap"><a href="../ch01/index.html">← Chapter 1</a> <a href="../index.html">All chapters</a> <a href="../ch03/index.html">Chapter 3 →</a></p></main>
+<footer>Companion to <em>The Practical Electronics Playbook</em> by Yogesh Bawane. Simulations run on third-party websites; their names are trademarks of their owners.</footer>
+<script src="../assets/copy.js"></script></body></html>
