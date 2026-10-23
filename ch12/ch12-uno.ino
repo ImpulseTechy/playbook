@@ -10,9 +10,21 @@ void setup() {
   digitalWrite(EN, LOW);   // start with the motor off
 }
 
-void forward() { digitalWrite(IN1, HIGH); digitalWrite(IN2, LOW);  digitalWrite(EN, HIGH); }
-void reverse() { digitalWrite(IN1, LOW);  digitalWrite(IN2, HIGH); digitalWrite(EN, HIGH); }
-void brake()   { digitalWrite(IN1, LOW);  digitalWrite(IN2, LOW);  digitalWrite(EN, HIGH); }
+void forward() {
+  digitalWrite(IN1, HIGH);
+  digitalWrite(IN2, LOW);
+  digitalWrite(EN, HIGH);
+}
+void reverse() {
+  digitalWrite(IN1, LOW);
+  digitalWrite(IN2, HIGH);
+  digitalWrite(EN, HIGH);
+}
+void brake() {
+  digitalWrite(IN1, LOW);
+  digitalWrite(IN2, LOW);
+  digitalWrite(EN, HIGH);
+}
 void coast()   { digitalWrite(EN, LOW); }
 
 void loop() {
