@@ -13,7 +13,8 @@ void loop() {
   delay(1000);                     // supply on: the capacitor charges fully
   unsigned long t0 = micros();
   for (int n = 0; n < N; n++) {
-    while (micros() - t0 < n * 500UL) { }      // wait for the next 0.5 ms slot
+    // wait for the next 0.5 ms slot
+    while (micros() - t0 < n * 500UL) { }
     if (n == 10) pinMode(SUPPLY_PIN, INPUT);   // 5 ms: supply drops out
     if (n == 30) {                             // 15 ms: supply returns
       digitalWrite(SUPPLY_PIN, HIGH);
