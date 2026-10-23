@@ -1,0 +1,87 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Chapter 17: The RC Time Constant: Charging and Exponential Decay</title><link rel="stylesheet" href="../assets/style.css"></head>
+<body><header class="top"><div><small>THE PRACTICAL ELECTRONICS PLAYBOOK · VOLUME 1</small><br>
+<a href="../index.html">Simulations, code and files</a></div></header>
+<main><p class="tag">Chapter 17</p><h1>The RC Time Constant: Charging and Exponential Decay</h1>
+<h2>Simulations</h2><p class="lead">Try the circuit on screen before you build it. Each simulation says what to try.</p>
+<div class="card"><span class="tag">Falstad CircuitJS</span><p>A 0.1 Hz square wave (a pin switching every 5 s) charging and discharging 100 µF through 10 kΩ. Drag the R slider and watch τ change.</p><a class="btn" href="https://www.falstad.com/circuit/circuitjs.html?ctz=CQAgjCAMB0lwrOSJ7MagUAJRATgGx6EEgAsAHFCAExTQTXSKOLIzwYBORP18xhZGDhwMAYxr9eU6tVJUYIiJAwBzSYVny+mqSuqQA7BumEKZEGICGABwwB7GijC1kAZnmtYrEAFoI1jZWYgCWAC72nBhulMpIcCgiyFgYQA" target="_blank" rel="noopener">Open in Falstad</a></div>
+<h2>Code</h2><p class="lead">The sketches from the chapter, ready to copy into the Arduino IDE.</p>
+<div class="card"><div class="codehead"><h3>Arduino UNO</h3><span><button class="copy" data-target="code0">Copy</button> <a class="btn ghost" href="ch17-uno.ino" download>Download .ino</a></span></div><pre id="code0">const int DRIVE_PIN = 8;
+const int SENSE_PIN = A0;
+const float VS = 5.0;              // measure your 5V pin and put the real value here
+const unsigned long HALF_MS = 5000;  // 5 tau with 10 kOhm and 100 uF
+const bool PLOT = false;           // true: print only the voltage, for the Serial Plotter
+
+float readCap() { return analogRead(SENSE_PIN) * VS / 1024.0; }
+
+void runPhase(int level, float target, const char* name) {
+  digitalWrite(DRIVE_PIN, level);
+  unsigned long t0 = millis(), lastPrint = 0, tau = 0;
+  while (millis() - t0 &lt; HALF_MS) {
+    float v = readCap();
+    unsigned long t = millis() - t0;
+    bool crossed = (level == HIGH) ? (v &gt;= target) : (v &lt;= target);
+    if (!tau &amp;&amp; crossed) tau = t;
+    if (t - lastPrint &gt;= 50) {
+      lastPrint = t;
+      if (PLOT) { Serial.print(&quot;V:&quot;); Serial.println(v, 3); }
+    }
+  }
+  if (!PLOT) {
+    Serial.print(name); Serial.print(&quot;: tau = &quot;);
+    Serial.print(tau); Serial.println(&quot; ms&quot;);
+  }
+}
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(DRIVE_PIN, OUTPUT);
+  digitalWrite(DRIVE_PIN, LOW);
+  delay(HALF_MS);                  // start fully discharged
+}
+
+void loop() {
+  runPhase(HIGH, 0.632 * VS, &quot;Charge   &quot;);
+  runPhase(LOW,  0.368 * VS, &quot;Discharge&quot;);
+}
+</pre></div>
+<div class="card"><div class="codehead"><h3>ESP32</h3><span><button class="copy" data-target="code1">Copy</button> <a class="btn ghost" href="ch17-esp32.ino" download>Download .ino</a></span></div><pre id="code1">const int DRIVE_PIN = 25;
+const int SENSE_PIN = 34;
+const float VS = 3.3;              // measure your 3V3 pin and put the real value here
+const unsigned long HALF_MS = 5000;  // 5 tau with 10 kOhm and 100 uF
+const bool PLOT = false;           // true: print only the voltage, for the Serial Plotter
+
+float readCap() { return analogReadMilliVolts(SENSE_PIN) / 1000.0; }
+
+void runPhase(int level, float target, const char* name) {
+  digitalWrite(DRIVE_PIN, level);
+  unsigned long t0 = millis(), lastPrint = 0, tau = 0;
+  while (millis() - t0 &lt; HALF_MS) {
+    float v = readCap();
+    unsigned long t = millis() - t0;
+    bool crossed = (level == HIGH) ? (v &gt;= target) : (v &lt;= target);
+    if (!tau &amp;&amp; crossed) tau = t;
+    if (t - lastPrint &gt;= 50) {
+      lastPrint = t;
+      if (PLOT) Serial.printf(&quot;V:%.3f\n&quot;, v);
+    }
+  }
+  if (!PLOT) Serial.printf(&quot;%s: tau = %lu ms\n&quot;, name, tau);
+}
+
+void setup() {
+  Serial.begin(115200);
+  pinMode(DRIVE_PIN, OUTPUT);
+  digitalWrite(DRIVE_PIN, LOW);
+  delay(HALF_MS);                  // start fully discharged
+}
+
+void loop() {
+  runPhase(HIGH, 0.632 * VS, &quot;Charge   &quot;);
+  runPhase(LOW,  0.368 * VS, &quot;Discharge&quot;);
+}
+</pre></div>
+<p style="margin-top:2em;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap"><a href="../ch16/index.html">← Chapter 16</a> <a href="../index.html">All chapters</a> <a href="../ch18/index.html">Chapter 18 →</a></p></main>
+<footer>Companion to <em>The Practical Electronics Playbook</em> by Yogesh Bawane. Simulations run on third-party websites; their names are trademarks of their owners.</footer>
+<script src="../assets/copy.js"></script></body></html>
